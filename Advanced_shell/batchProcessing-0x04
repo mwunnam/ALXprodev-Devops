@@ -6,18 +6,28 @@ BASE_URL="https://pokeapi.co/api/v2/pokemon"
 ERROR_LOG="errros.txt"
 > "$ERROR_LOG" # this clears the previous errors
 
-# Loop through the list
-for name in "${POKEMONS[@]}"; do
+# Function to fetch a single Pokemon
+fetch_pokemon(){
+    name="$1"
     name_lower=$(echo "$name" | tr '[:upper:]' '[:lower:]')
     OUTPUT_FILE=${name_lower}.json
-    curl -s -f "$BASE_URL/$name_lower" -o "$OUTPUT_FILE"
+    
+    echo "Fetching $name_lower..."
 
+    curl -s -f "$BASE_URL/$name_lower" -o "$OUTPUT_FILE"
+    
     if [ $? -ne 0 ]; then
         echo "Failed to fectch data from $name_lower at $(date)" >> "$ERROR_LOG"
         echo "Failed: $name"
     else   
         echo "Success: Data Saved to $OUTPUT_FILE"
     fi
+}
 
-    sleep 2
+for name in "${POKEMONS[@]}"; do
+   fetch_pokemon "$name" &
 done
+
+wait
+
+echo "All Pokemon data fetched!"
