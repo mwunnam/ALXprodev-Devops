@@ -28,6 +28,12 @@ for name in "${POKEMONS[@]}"; do
    fetch_pokemon "$name" &
 done
 
+echo "Woking in the background:"
+
+jobs
+
+echo "To cancel a background job, you could use: kill %<job_number>"
+
 wait
 
 echo "All Pokemon data fetched!"
