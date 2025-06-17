@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List for the names
-POKEMONS=(Bulbasaur Ivysaur Venusaur Charmander Charmeleon)
+POKEMONS=(bulbasaur ivysaur venusaur charmander charmeleon)
 BASE_URL="https://pokeapi.co/api/v2/pokemon"
 ERROR_LOG="errros.txt"
 > "$ERROR_LOG" # this clears the previous errors
