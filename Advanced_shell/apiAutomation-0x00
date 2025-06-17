@@ -1,9 +1,10 @@
 #!/bin/bash
 
-name="jq -r .name data.json"
-height="jq -r .height data.json"
-weight="jq -r .height data.json"
-type="jq -r .types[0].type.name data.json"
+# Set API endpoints and output files
+POKEMON="pikachu"
+URL="https://pokeapi.co/api/v2/pokemon/"
+OUTPUT_FILE="data.json"
+ERROR_FILE="errors.txt"
 
 # Make the API request
 curl -s -f "$URL" -o "$OUTPUT_FILE"
@@ -13,4 +14,3 @@ if [ $? -ne 0 ]; then
     echo "Failed to fectch data"
 else
     echo "Data fetched successfully and saved to $OUTPUT_FILE"
-fi
