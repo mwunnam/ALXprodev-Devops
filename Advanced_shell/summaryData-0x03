@@ -1,0 +1,26 @@
+#!/bin/bash
+
+CSV_FILE="pokemon_report.csv"
+POKEMONS=(bulbasaur ivysaur venusaur charmander charmeleon)
+
+echo "Name, Height (m), Weight (Kg)" > "$CSV_FILE"
+
+for pokemon in "${POKEMONS[@]}"; do
+    file="${pokemon}.json"
+    name=$(jq -r '.name' $file | sed 's/.*/\u&/')
+    formatted_height=$(jq -r '.height' $file | awk '{printf "%.1f", $1 / 10}')
+    formatted_weight=$(jq -r '.weight' $file | awk '{printf "%.1f", $1 / 10}')
+
+    echo "${name^},$formatted_height,$formatted_weight" >> "$CSV_FILE"
+done
+
+cat "$CSV_FILE"
+echo ""
+awk -F',' 'NR>1 {height+=$2; weight+=$3; count++} 
+           END { 
+             if (count > 0) {
+               printf "Average Height: %.2f m\nAverage Weight: %.2f kg\n", height/count, weight/count 
+             } else {
+               print "No data to compute averages."
+             }
+           }' "$CSV_FILE"
