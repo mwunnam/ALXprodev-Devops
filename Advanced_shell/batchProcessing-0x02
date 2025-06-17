@@ -10,14 +10,25 @@ ERROR_LOG="errros.txt"
 for name in "${POKEMONS[@]}"; do
     name_lower=$(echo "$name" | tr '[:upper:]' '[:lower:]')
     OUTPUT_FILE=${name_lower}.json
-    curl -s -f "$BASE_URL/$name_lower" -o "$OUTPUT_FILE"
+    ATTEMPT=1
+    SUCCESS=0
 
-    if [ $? -ne 0 ]; then
-        echo "Failed to fectch data from $name_lower at $(date)" >> "$ERROR_LOG"
-        echo "Failed: $name"
-    else   
-        echo "Success: Data Saved to $OUTPUT_FILE"
+    while [ $ATTEMPT -le 3 ]; do
+        curl -s -f "$BASE_URL/$name_lower" -o "$OUTPUT_FILE"
+        if [ $? -eq 0 ]; then
+            echo "Success on attempt $ATTEMPT"
+            SUCCESS=1
+            break
+        else
+            echo "Attempt $ATTEMPT for $name failed."
+            ((ATTEMPT++))
+            sleep 2
+        fi
+    done
+
+    if [ $SUCCESS -ne 1 ]; then
+        echo "Failed to fetch $name after 3 attemps" >> "$ERROR_LOG"
     fi
 
-    sleep 2
+    sleep 1
 done
